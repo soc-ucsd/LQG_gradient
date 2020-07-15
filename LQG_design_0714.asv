@@ -88,7 +88,7 @@ Bk = [0;1];
 Ck = [theta(3) theta(4)];
 Kt.Ak = Ak; Kt.Bk = Bk; Kt.Ck = Ck;
 
-maxIter = 5e4;
+maxIter = 1e4;
 thetaIter = zeros(4,maxIter);
 gradIter  = zeros(4,maxIter);  
 Jcost     = zeros(maxIter,1);
@@ -146,6 +146,54 @@ for k = 1:maxIter
         break;
     end
 end
+
+%%
+Num = 5e3;
+JcostNew     = zeros(Num,1);
+gradNormNew  = zeros(Num,1);
+
+
+S = are(A,B*R^(-1)*B',Qc);
+K1 = R^(-1)*B'*S;
+K = lqr(A,B,Qc,R);
+
+%W = eye(nx);V = eye(ny);
+P = are(A',C'*V^(-1)*C,W);
+L = P*C'*V^(-1);
+
+% dynamic controller
+Akopt = A - B*K- L*C;
+Bkopt = L;
+Ckopt = -K;
+
+
+   index = 1;
+while index <= Num
+   Ak = Akopt + 0.01*randn(2);
+   Bk = Bkopt;% + 0.01*rann(1,2);
+   Ck = CKopt + 0.01*randn(2,1);
+   
+    hA = [A B*Ck;Bk*C Ak];
+ 
+    if max(real(eig(hA))) < -1e-6
+        [Grad_A,Grad_B,Grad_C,Jt,Info] = LQGgrad(A,B,C,Kt,Qc,R,W,V,flag);
+
+        gradNormNew(index) = norm([Grad_A(:);Grad_B(:);Grad_C(:)],2)^2;
+        
+        JcostNew(index) = Jt;
+        
+        index = index + 1;
+        
+        if mod(index,100) = 0
+        printf('index %d \n', index);     
+    end
+    
+  
+   
+    
+end
+
+
 
 
 
