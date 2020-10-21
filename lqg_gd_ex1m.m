@@ -93,6 +93,65 @@ Go = ss(Ak,Bk,Ck,[]);
 [tf(G1),tf(G2),tf(G3),tf(Go)]
 
 
+% ------------------------------------------------------------------------
+%          Hessian
+% ------------------------------------------------------------------------
+[n,m] = size(B);
+[p,n] = size(C);
 
+Hess1 = zeros(n^2 + p*n + m*n);
+Indx = ones(m+n,p+n);
+Indx(1:m,1:p) = zeros(m,p);
+Indx = Indx(:);
 
+nonInd = find(Indx > 0);
 
+for i = 1:n^2 + p*n + m*n
+    for j = i:n^2 + p*n + m*n   
+        Delta1 = zeros((p+n)*(m+n),1);Delta1(nonInd(i)) = 1;
+        Delta1 = reshape(Delta1,m+n,p+n); 
+        Delta2 = zeros((p+n)*(m+n),1);Delta2(nonInd(j)) = 1;
+        Delta2 = reshape(Delta2,m+n,p+n);  
+        [Ja, Jb, Jc, H, info] = LQGhess(A,B,C,K1,Qc,R,W,V,Delta1,Delta2);
+        Hess1(i,j) = H;
+        Hess1(j,i) = H;
+    end
+end
+
+Hess2 = zeros(n^2 + p*n + m*n);
+Indx = ones(m+n,p+n);
+Indx(1:m,1:p) = zeros(m,p);
+Indx = Indx(:);
+
+nonInd = find(Indx > 0);
+
+for i = 1:n^2 + p*n + m*n
+    for j = i:n^2 + p*n + m*n   
+        Delta1 = zeros((p+n)*(m+n),1);Delta1(nonInd(i)) = 1;
+        Delta1 = reshape(Delta1,m+n,p+n); 
+        Delta2 = zeros((p+n)*(m+n),1);Delta2(nonInd(j)) = 1;
+        Delta2 = reshape(Delta2,m+n,p+n);  
+        [Ja, Jb, Jc, H, info] = LQGhess(A,B,C,K2,Qc,R,W,V,Delta1,Delta2);
+        Hess2(i,j) = H;
+        Hess2(j,i) = H;
+    end
+end
+
+Hess3 = zeros(n^2 + p*n + m*n);
+Indx = ones(m+n,p+n);
+Indx(1:m,1:p) = zeros(m,p);
+Indx = Indx(:);
+
+nonInd = find(Indx > 0);
+
+for i = 1:n^2 + p*n + m*n
+    for j = i:n^2 + p*n + m*n   
+        Delta1 = zeros((p+n)*(m+n),1);Delta1(nonInd(i)) = 1;
+        Delta1 = reshape(Delta1,m+n,p+n); 
+        Delta2 = zeros((p+n)*(m+n),1);Delta2(nonInd(j)) = 1;
+        Delta2 = reshape(Delta2,m+n,p+n);  
+        [Ja, Jb, Jc, H, info] = LQGhess(A,B,C,K3,Qc,R,W,V,Delta1,Delta2);
+        Hess3(i,j) = H;
+        Hess3(j,i) = H;
+    end
+end
