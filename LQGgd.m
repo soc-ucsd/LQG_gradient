@@ -19,8 +19,8 @@ flag = 1; % continuous time systems
 % ------------------------------------------------------------------------
 alpha   = 0.01;     % backtrapping line search 
 beta    = 0.5;
-tol     = 1e-4;    % tolerance of norm of gradient direction
-MaxIter = 5e3;      % maximum number of gradient steps
+tol     = 1e-6;    % tolerance of norm of gradient direction
+MaxIter = 1e4;      % maximum number of gradient steps
 Disp    = 50;
 
 Jcost   = zeros(MaxIter,0);
@@ -49,6 +49,11 @@ for Iter = 1:MaxIter
             Grad_B,    Grad_A];  % put it into one matrix    
     ngradK = norm(gradK,'fro');
 
+    % stop the algorithm if the norm of gradient is small enough        
+    if ngradK < tol
+        break;
+    end
+    
     % --------------------------------------------------------------------
     %    Update according to Armijo rule: 
     % -------------------------------------------------------------------     
@@ -62,11 +67,13 @@ for Iter = 1:MaxIter
     Y        = lyap(Acl',blkdiag(Q,Kt.Ck'*R*Kt.Ck));
     Jtemp    = trace(blkdiag(W,Kt.Bk*Kt.Bk')*Y);
 
+    
     % Backtracking line search
     while mEigAcl >= 0 || J - Jtemp < StepSize*alpha*trace(gradK'*gradK)
         StepSize = beta*StepSize;
         if StepSize < 1.e-19
-            error('Gradient method gets stuck with very small step size!')
+            warning('Gradient method gets stuck with very small step size!');
+            break;
         end
         Kt.Ak    = K.Ak - StepSize*Grad_A;
         Kt.Bk    = K.Bk - StepSize*Grad_B;
@@ -86,9 +93,9 @@ for Iter = 1:MaxIter
     J = Jtemp;
 
     % stop the algorithm if the norm of gradient is small enough        
-    if ngradK < tol
-        break;
-    end
+%     if ngradK < tol
+%         break;
+%     end
 end
 
 % -----------------------------------------------------------------------

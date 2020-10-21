@@ -1,5 +1,6 @@
 
-clc;clear;close all
+%clc;clear;
+close all
 
 nx = 2;    % Number of states
 nu = 1;    % Number of inputs;
@@ -30,11 +31,13 @@ Ak = A - B*K- L*C;
 Bk = L;
 Ck = -K;
 
+Ko.Ak = Ak; Ko.Bk = Bk;Ko.Ck = Ck;
 % cost
 hA = [A B*Ck;Bk*C Ak];
 Y  = lyap(hA',blkdiag(Qc,Ck'*R*Ck));
 Jopt  = trace(blkdiag(W,Bk*Bk')*Y);
 
+%[K1,J1,info1] = LQGgd(A,B,C,Qc,R,W,V,Ko);
 % ---------------------------------------------
 % Gradient descent 
 % ---------------------------------------------
@@ -65,5 +68,31 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 400 300]);
 set(gca,'TickLabelInterpreter','latex')
+
+% another initial point
+K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck+0.05*randn(nu,nx);
+
+[K3,J3,info3] = LQGgd(A,B,C,Qc,R,W,V,K0);
+
+figure;
+index = 1:1:info3.iter;
+semilogy(index,info3.Jiter(index)-Jopt)
+ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
+xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
+set(gcf,'Position',[250 150 400 300]);
+set(gca,'TickLabelInterpreter','latex')
+
+
+
+G1 = ss(K1.Ak,K1.Bk,K1.Ck,[]);
+G2 = ss(K2.Ak,K2.Bk,K2.Ck,[]);
+G3 = ss(K3.Ak,K3.Bk,K3.Ck,[]);
+
+Go = ss(Ak,Bk,Ck,[]);
+
+[tf(G1),tf(G2),tf(G3),tf(Go)]
+
+
+
 
 
