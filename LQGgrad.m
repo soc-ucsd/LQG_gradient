@@ -15,7 +15,7 @@ function [Ja, Jb, Jc,J,info] = LQGgrad(A,B,C,K,Q,R,W,V,flag)
             error('The closed-loop system is not stable');
         end
         Y  = lyap(hA',blkdiag(Q,Ck'*R*Ck));
-        X = lyap(hA,blkdiag(W,Bk*V*Bk'));
+        X  = lyap(hA,blkdiag(W,Bk*V*Bk'));
         
         J = trace(blkdiag(W,Bk*V*Bk')*Y);
 
@@ -34,9 +34,6 @@ function [Ja, Jb, Jc,J,info] = LQGgrad(A,B,C,K,Q,R,W,V,flag)
         % for debug
         hB = blkdiag(B,eye(nx));
         hC = blkdiag(C,eye(nx));
-      %  hR = blkdiag(R,zeros(nx));
-      %  hV = blkdiag(V,zeros(nx));
-      %  theta = [zeros(size(Bk,2),size(Ck,1)) Ck; Bk, Ak];
         info.grad = 2*(hB'*Y + [zeros(m,nx) R*Ck; zeros(nx,nx), zeros(nx,nx)])*....
             (hC*X + [zeros(p,nx) V*Bk'; zeros(nx,nx), zeros(nx,nx)])';
 

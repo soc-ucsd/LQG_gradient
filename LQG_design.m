@@ -88,7 +88,7 @@ Bk = [0;1];
 Ck = [theta(3) theta(4)];
 Kt.Ak = Ak; Kt.Bk = Bk; Kt.Ck = Ck;
 
-maxIter = 5e4;
+maxIter = 1e4;
 thetaIter = zeros(4,maxIter);
 gradIter  = zeros(4,maxIter);  
 Jcost     = zeros(maxIter,1);

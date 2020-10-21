@@ -13,25 +13,38 @@ sys = ss(A,B,C,[],[]);
 
 
 %% From Doyle's paper 
-A = rand(2);%[1 1;0 1];
-B = rand(2,1); %[0;1];
-C = rand(1,2); %[1 0];
+n = 3;
+ A = rand(3);%[1 1;0 1];
+ B = rand(3,1); %[0;1];
+ C = rand(1,3); %[1 0];
+
+%A = [1 1;0 1];
+%B = [0;1];
+%C = [1 0];
+
+% A = [-1 0;0 -1];
+% B = [1;1];
+% C = [1 1];
+
 
 % performance weight
 q = 1;
-Q = q*[1;1]*[1 1];
+%Q = q*[1;1]*[1 1];
+Q = eye(3);
 R = 1;
 
 V = 1;
 w = 1;
-W = w*[1;1]*[1 1];
+%W = w*[1;1]*[1 1];
+
+W = eye(3);
 
 Qc = Q;
 
 
 
 %%
-Num = 2e4;
+Num = 1e4;
 JcostNew     = zeros(Num,1);
 gradNormNew  = zeros(Num,1);
 
@@ -58,9 +71,9 @@ Jopt  = trace(blkdiag(W,Bkopt*Bkopt')*Y);
 flag =1 ;
    index = 1;
 while index <= Num
-   Ak = Akopt + 0.0005*randn(2);
-   Bk = Bkopt + 0.0005*randn(2,1);
-   Ck = Ckopt + 0.0005*randn(1,2);
+   Ak = Akopt + 0.00005*randn(n);
+   Bk = Bkopt + 0.00005*randn(n,1);
+   Ck = Ckopt + 0.00005*randn(1,n);
    
     hA = [A B*Ck;Bk*C Ak];
     
