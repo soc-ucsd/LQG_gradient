@@ -10,4 +10,4 @@ The gradient descent algorithms are implemented in
 * LQG_gd_cano.m (partial gradient over controllable canonical form) 
 * LQG_gd_full.m (full gradient)
 
-Run Example_Doyle.m to see some performance; more examples are contained in the /*Examples*/ folder.
+Run Example_Doyle.m to see some performance; more examples are contained in the *Examples* folder.
