@@ -13,7 +13,7 @@ A = [1 1;0 1];
 B = [0;1];
 C = [1,0];
 
-q = 10; sigma = 10;
+q = 5; sigma = 5;
 Qc = q*[1;1]*[1 1];
 R = 1;
 W = sigma*[1;1]*[1 1];
@@ -41,58 +41,36 @@ hA    = [A B*Ck;Bk*C Ak];
 Y     = lyap(hA',blkdiag(Qc,Ck'*R*Ck));
 Jopt  = trace(blkdiag(W,Bk*Bk')*Y);
 
+Num = 4; % number of initial points
 % ---------------------------------------------
 % Gradient descent 
 % ---------------------------------------------
-p = rand(2,1)-2;%[-1,-2]; % closed-loop poles;
-K = place(A,B,p);
-L = place(A',C',p); L = L';
-Ak = A - B*K- L*C;
-Bk = L;
-Ck = -K;
-K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck;
+info_full = cell(Num,1);
+info_cano = cell(Num,1);
+for ind = 1:Num
+    p = rand(2,1)-2;   % a random number between (-2,-1)
+    K = place(A,B,p);
+    L = place(A',C',p); L = L';
+    Ak = A - B*K- L*C;
+    Bk = L;
+    Ck = -K;
+    K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck;
 
-opts.stepsize = 1e-1;
+    opts.tol      = 1e-6;
+    opts.maxIter  = 1e4;
 
-% full gradient
-[K1,J1,info1] = LQGgd(A,B,C,Qc,R,W,V,K0,opts);
-Hess1 = LQGhessfull(A,B,C,K1,Qc,R,W,V);  % hessian
+    % full gradient
+    opts.stepsize = 5e-4;
+    [K1,J1,info1] = LQGgd(A,B,C,Qc,R,W,V,K0,opts);
+    info_full(Num) = info1;
+    % Hess1 = LQGhessfull(A,B,C,K1,Qc,R,W,V);  % hessian
 
-% gradient over canonical form
-[K2,J2,info2] = LQGgd_can(A,B,C,Qc,R,W,V,K0,opts);
-Hess2 = LQGhessfull(A,B,C,K2,Qc,R,W,V);  % hessian
-
-% another initial point around the globally optimal point
-while true
-    count = 1;
-    K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck+0.05*randn(nu,nx);
-    Acl  = [A B*K0.Ck; K0.Bk*C K0.Ak];
-    if  max(real(eig(Acl))) <0
-        break;
-    else
-        fprintf('initilization %d',count);
-        count = count + 1;
-    end
+    % gradient over canonical form
+    opts.stepsize = 5e-2;
+    [K2,J2,info2] = LQGgd_can(A,B,C,Qc,R,W,V,K0,opts);
+    info_cano(Num) = info2;
+    % Hess2 = LQGhessfull(A,B,C,K2,Qc,R,W,V);  % hessian
 end
-% full gradient
-[K3,J3,info3] = LQGgd(A,B,C,Qc,R,W,V,K0,opts);
-Hess3 = LQGhessfull(A,B,C,K3,Qc,R,W,V);  % hessian
-
-% gradient over canonical form
-[K4,J4,info4] = LQGgd_can(A,B,C,Qc,R,W,V,K0,opts);
-Hess4 = LQGhessfull(A,B,C,K4,Qc,R,W,V);  % hessian
-
-[J1,J2,J3,J4,Jopt]
-([J1,J2,J3,J4]-Jopt)./Jopt
-
-G1 = ss(K1.Ak,K1.Bk,K1.Ck,[]);
-G2 = ss(K2.Ak,K2.Bk,K2.Ck,[]);
-G3 = ss(K3.Ak,K3.Bk,K3.Ck,[]);
-G4 = ss(K4.Ak,K4.Bk,K4.Ck,[]);
-Go = ss(Ak,Bk,Ck,[]);
-
-[tf(G1),tf(G2),tf(G3),tf(G4),tf(Go)]
-
 % ------------------------------------------------------------------------
 %          Figure
 % ------------------------------------------------------------------------
@@ -128,5 +106,18 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 400 300]);
 set(gca,'TickLabelInterpreter','latex')
+
+
+%while true
+%     count = 1;
+%     K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck+0.05*randn(nu,nx);
+%     Acl  = [A B*K0.Ck; K0.Bk*C K0.Ak];
+%     if  max(real(eig(Acl))) <0
+%         break;
+%     else
+%         fprintf('initilization %d',count);
+%         count = count + 1;
+%     end
+% end
 
 

@@ -41,19 +41,19 @@ Jopt  = trace(blkdiag(W,Bk*Bk')*Y);
 % Gradient descent 
 % ---------------------------------------------
 K0.Ak = -eye(nx); K0.Bk = zeros(nx,ny);K0.Ck = rand(nu,nx);
-[K1,J1,info1] = LQGgd(A,B,C,Qc,R,W,V,K0);
+[K1,J1,info1] = LQG_gd_full(A,B,C,Qc,R,W,V,K0);
 Hess1 = LQGhessfull(A,B,C,K1,Qc,R,W,V);  % hessian
 
 
 % another initial point
 K0.Ak = -eye(nx); K0.Bk = rand(nx,ny);K0.Ck = zeros(nu,nx);
 [K2,J2,info2] = LQGgd(A,B,C,Qc,R,W,V,K0);
-Hess2 = LQGhessfull(A,B,C,K2,Qc,R,W,V);  % hessian
+Hess2 = LQG_gd_full(A,B,C,K2,Qc,R,W,V);  % hessian
 
 % another initial point
 K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck+0.05*randn(nu,nx);
 
-[K3,J3,info3] = LQGgd(A,B,C,Qc,R,W,V,K0);
+[K3,J3,info3] = LQG_gd_full(A,B,C,Qc,R,W,V,K0);
 Hess3 = LQGhessfull(A,B,C,K3,Qc,R,W,V);  % hessian
 
 [J1,J2,J3,Jopt]
@@ -95,70 +95,3 @@ xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 400 300]);
 set(gca,'TickLabelInterpreter','latex')
 
-
-
-
-% 
-% 
-% % ------------------------------------------------------------------------
-% %          Hessian
-% % ------------------------------------------------------------------------
-% [n,m] = size(B);
-% [p,n] = size(C);
-% 
-% Hess1 = zeros(n^2 + p*n + m*n);
-% Indx = ones(m+n,p+n);
-% Indx(1:m,1:p) = zeros(m,p);
-% Indx = Indx(:);
-% 
-% nonInd = find(Indx > 0);
-% 
-% for i = 1:n^2 + p*n + m*n
-%     for j = i:n^2 + p*n + m*n   
-%         Delta1 = zeros((p+n)*(m+n),1);Delta1(nonInd(i)) = 1;
-%         Delta1 = reshape(Delta1,m+n,p+n); 
-%         Delta2 = zeros((p+n)*(m+n),1);Delta2(nonInd(j)) = 1;
-%         Delta2 = reshape(Delta2,m+n,p+n);  
-%         [Ja, Jb, Jc, H, info] = LQGhess(A,B,C,K1,Qc,R,W,V,Delta1,Delta2);
-%         Hess1(i,j) = H;
-%         Hess1(j,i) = H;
-%     end
-% end
-% 
-% Hess2 = zeros(n^2 + p*n + m*n);
-% Indx = ones(m+n,p+n);
-% Indx(1:m,1:p) = zeros(m,p);
-% Indx = Indx(:);
-% 
-% nonInd = find(Indx > 0);
-% 
-% for i = 1:n^2 + p*n + m*n
-%     for j = i:n^2 + p*n + m*n   
-%         Delta1 = zeros((p+n)*(m+n),1);Delta1(nonInd(i)) = 1;
-%         Delta1 = reshape(Delta1,m+n,p+n); 
-%         Delta2 = zeros((p+n)*(m+n),1);Delta2(nonInd(j)) = 1;
-%         Delta2 = reshape(Delta2,m+n,p+n);  
-%         [Ja, Jb, Jc, H, info] = LQGhess(A,B,C,K2,Qc,R,W,V,Delta1,Delta2);
-%         Hess2(i,j) = H;
-%         Hess2(j,i) = H;
-%     end
-% end
-% 
-% Hess3 = zeros(n^2 + p*n + m*n);
-% Indx = ones(m+n,p+n);
-% Indx(1:m,1:p) = zeros(m,p);
-% Indx = Indx(:);
-% 
-% nonInd = find(Indx > 0);
-% 
-% for i = 1:n^2 + p*n + m*n
-%     for j = i:n^2 + p*n + m*n   
-%         Delta1 = zeros((p+n)*(m+n),1);Delta1(nonInd(i)) = 1;
-%         Delta1 = reshape(Delta1,m+n,p+n); 
-%         Delta2 = zeros((p+n)*(m+n),1);Delta2(nonInd(j)) = 1;
-%         Delta2 = reshape(Delta2,m+n,p+n);  
-%         [Ja, Jb, Jc, H, info] = LQGhess(A,B,C,K3,Qc,R,W,V,Delta1,Delta2);
-%         Hess3(i,j) = H;
-%         Hess3(j,i) = H;
-%     end
-% end
