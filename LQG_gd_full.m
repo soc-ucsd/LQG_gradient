@@ -35,7 +35,7 @@ flag = 1; % continuous time systems
 % Setup default parameters  
 % ------------------------------------------------------------------------
 initsize = 1;
-alpha    = 0.01;     % backtrapping line search 
+alpha    = 0.2;     % backtrapping line search 
 beta     = 0.5;
 tol      = 1e-8;    % tolerance of norm of gradient direction
 MaxIter  = 1e4;      % maximum number of gradient steps

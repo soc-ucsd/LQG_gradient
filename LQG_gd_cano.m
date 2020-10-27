@@ -27,7 +27,7 @@ function [Kopt,Jopt,info] = LQG_gd_cano(A,B,C,Q,R,W,V,K0,opts)
 % Paper:   Analysis of the Optimization Landscape of Linear Quadratic Gaussian Control
 
 % System dimensions
-flag  = 1; % continuous time systems for now
+flag  = 1;         % continuous time systems for now
 [n,m] = size(B);
 [p,~] = size(C);
 
@@ -35,17 +35,15 @@ flag  = 1; % continuous time systems for now
 % Setup default parameters  
 %------------------------------------------------------------------------
 initsize = 1;
-alpha    = 1e-2;     % backtrapping line search 
+alpha    = 0.2;     % backtrapping line search 
 beta     = 0.5;
 tol      = 1e-8;    % tolerance of norm of gradient direction
-MaxIter  = 1e4;      % maximum number of gradient steps
+MaxIter  = 1e4;     % maximum number of gradient steps
 Disp     = 100;
-
 
 myline1 = [repmat('=',1,64),'\n'];
 myline2 = [repmat('-',1,64),'\n'];
 header  = ' iter  |   ngradK    |   par_ngradK  |   LQG cost   |  step_size \n';
-
 
 %------------------------------------------------------------------------
 % Setup
@@ -56,7 +54,6 @@ if(nargin > 8)
     tol      = opts.tol;
     MaxIter  = opts.maxIter;
 end
-
 
 % ------------------------------------------------------------------------
 % Initial stabilization 
