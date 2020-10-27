@@ -1,6 +1,12 @@
-% -------------------------------------------------------------------------
-% John Doyle's Example
+% -----------------------------------------------------------------------
+% Example 8 in the Paper
+% Authors: Yand Zheng, Yujie Tang, Na Li
+% Title:   Analysis of the Optimization Landscape of 
+%                                        Linear Quadratic Gaussian Control
 %-------------------------------------------------------------------------
+
+addpath('../lqg_utils')
+addpath('..');
 
 clc;clear; close all
 
@@ -8,14 +14,15 @@ nx = 2;    % Number of states
 nu = 1;    % Number of inputs;
 ny = 1;    % Number of outputs
 
+epsilon = 0.2;
 % dynamics
-A = [-1 0;1 -2];
-B = [-1;1];
-C = [-2,11];
+A = 3/2*[-1 0;0 -1-epsilon];
+B = [1;1+epsilon];
+C = [1,1];
 
-Qc =eye(2);
+Qc = [4 1;1 4];
 R = 1;
-W = eye(2);
+W = [4 1+epsilon;1+epsilon 4*(1+epsilon)^2];
 V = 1;
 
 % ---------------------------------------------
@@ -90,7 +97,7 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 300 300]);
 set(gca,'TickLabelInterpreter','latex')
-print(gcf,'Fig_Example6_1','-painters','-dpng','-r 600')
+print(gcf,'Fig_Example8_1_05','-painters','-dpng','-r 600')
 
 figure;
 for ind = 1:Num
@@ -101,4 +108,4 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 300 300]);
 set(gca,'TickLabelInterpreter','latex')
-print(gcf,'Fig_Example6_2','-painters','-dpng','-r 600')
+print(gcf,'Fig_Example8_2_05','-painters','-dpng','-r 600')

@@ -1,6 +1,13 @@
-% -------------------------------------------------------------------------
-% John Doyle's Example
+% -----------------------------------------------------------------------
+% Example 7 in the Paper
+% Authors: Yand Zheng, Yujie Tang, Na Li
+% Title:   Analysis of the Optimization Landscape of 
+%                                        Linear Quadratic Gaussian Control
 %-------------------------------------------------------------------------
+
+addpath('../lqg_utils')
+addpath('..');
+
 
 clc;clear; close all
 
@@ -8,15 +15,14 @@ nx = 2;    % Number of states
 nu = 1;    % Number of inputs;
 ny = 1;    % Number of outputs
 
-epsilon = 0.2;
 % dynamics
-A = 3/2*[-1 0;0 -1-epsilon];
-B = [1;1+epsilon];
-C = [1,1];
+A = [0 -1;1 0];
+B = [1;0];
+C = [1,-1];
 
-Qc = [4 1;1 4];
+Qc = [4 0;0 0];
 R = 1;
-W = [4 1+epsilon;1+epsilon 4*(1+epsilon)^2];
+W = [1 -1;-1 16];
 V = 1;
 
 % ---------------------------------------------
@@ -58,19 +64,19 @@ for ind = 1:Num
     %Ak = -50*eye(2); Bk = 50*rand(nx,ny); Ck = zeros(nu,nx);
     K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck;
 
-    opts.tol      = 1e-6;
+    opts.tol      = 1e-5;
     opts.maxIter  = 1e4;
 
     % full gradient
-    opts.stepsize = 1e0;
-    [K1,J1,info1] = LQGgd(A,B,C,Qc,R,W,V,K0,opts);
+    opts.stepsize = 1e-2;
+    [K1,J1,info1] = LQG_gd_full(A,B,C,Qc,R,W,V,K0,opts);
     info_full{ind} = info1;
     K_full{ind}    = K1;
     % Hess1 = LQGhessfull(A,B,C,K1,Qc,R,W,V);  % hessian
 
     % gradient over canonical form
-    opts.stepsize = 1e0;
-    [K2,J2,info2] = LQGgd_can(A,B,C,Qc,R,W,V,K0,opts);
+    opts.stepsize = 1e-1;
+    [K2,J2,info2] = LQG_gd_cano(A,B,C,Qc,R,W,V,K0,opts);
     info_cano{ind} = info2;
     K_cano{ind}    = K2;
     % Hess2 = LQGhessfull(A,B,C,K2,Qc,R,W,V);  % hessian
@@ -91,7 +97,7 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 300 300]);
 set(gca,'TickLabelInterpreter','latex')
-print(gcf,'Fig_Example8_1_05','-painters','-dpng','-r 600')
+print(gcf,'Fig_Example7_1','-painters','-dpng','-r 600')
 
 figure;
 for ind = 1:Num
@@ -102,4 +108,4 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 300 300]);
 set(gca,'TickLabelInterpreter','latex')
-print(gcf,'Fig_Example8_2_05','-painters','-dpng','-r 600')
+print(gcf,'Fig_Example7_2','-painters','-dpng','-r 600')
