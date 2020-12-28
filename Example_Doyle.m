@@ -60,7 +60,8 @@ for ind = 1:Num
     K0.Ak = Ak; K0.Bk = Bk;K0.Ck = Ck;
 
     opts.tol      = 1e-3;
-    opts.maxIter  = 2e3;
+    opts.maxIter  = 5e3;
+    opts.Disp     = 100;
 
     % full gradient
     opts.stepsize = 5e-5;
@@ -96,7 +97,7 @@ set(gca,'TickLabelInterpreter','latex')
 
 figure;
 for ind = 1:Num
-    index = 1:1:info1.iter;
+    index = 1:1:info2.iter;
     semilogy(index,info_cano{ind}.Jiter(index)-Jopt,colorName{ind},'linewidth',lineWidth); hold on;
 end
 ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);

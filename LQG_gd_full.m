@@ -1,4 +1,4 @@
-function [Kopt,Jopt,info] = LQG_gd_full(A,B,C,Q,R,W,V,K0,opts)
+function [Kopt,Jopt,info] = LQG_gd_full(A,B,C,Q,R,W,V,K0,userOpts)
 %
 % LQG: Gradient descent algorithm with a full gradient update
 %
@@ -15,9 +15,9 @@ function [Kopt,Jopt,info] = LQG_gd_full(A,B,C,Q,R,W,V,K0,opts)
 %    Initial point:  K0, which contains K0.Ak, K0.Bk, K0.Ck
 %
 %    User options: opts
-%                    opts.tol        stopping tolorance
+%                    opts.opts.tol        stopping opts.tolorance
 %                    opts.stepsize   step size for line search
-%                    opts.maxIter    maximum iterations
+%                    opts.opts.maxIter    maximum iterations
 % Outputs:
 %    Kopt:  optimal controller
 %    Jopt:  optimal LQG cost
@@ -34,33 +34,33 @@ flag = 1; % continuous time systems
 % ------------------------------------------------------------------------
 % Setup default parameters  
 % ------------------------------------------------------------------------
-initsize = 1;
-alpha    = 0.2;     % backtrapping line search 
-beta     = 0.5;
-tol      = 1e-8;    % tolerance of norm of gradient direction
-MaxIter  = 1e4;      % maximum number of gradient steps
-Disp     = 100;
+opts.stepsize = 1;
+opts.alpha    = 0.2;     % backtrapping line search 
+opts.beta     = 0.5;
+opts.tol      = 1e-8;    % opts.tolerance of norm of gradient direction
+opts.maxIter  = 1e3;      % maximum number of gradient steps
+opts.Disp     = 100;
 
 myline1 = [repmat('=',1,48),'\n'];
 myline2 = [repmat('-',1,48),'\n'];
 header  = ' iter  |   ngradK    |   LQG cost  | step_size \n';
 
-
-%============================================
-% Setup
-%============================================
 % Set user options
 if(nargin > 8)
-    initsize = opts.stepsize;
-    tol      = opts.tol;
-    MaxIter  = opts.maxIter;
-    Disp     = opts.Disp;
+    fnames = fieldnames(userOpts);
+    for i=1:length(fnames)
+        if isfield(opts,fnames{i})
+            opts.(fnames{i}) = userOpts.(fnames{i});
+        else
+            warning('Option ''%s'' is unknown and will be ignored.',fnames{i})
+        end
+    end
 end
 
 % ------------------------------------------------------------------------
 % Initial stabilization 
 % ------------------------------------------------------------------------
-Jcost = zeros(MaxIter,0); 
+Jcost = zeros(opts.maxIter,0); 
 K     = K0; 
 Acl   = [A B*K.Ck; K.Bk*C K.Ak];
 if  max(real(eig(Acl))) >=0
@@ -76,12 +76,12 @@ end
 fprintf(myline1);
 fprintf('Gradient descent for LQG problem\n');
 fprintf('System dimensions: n = %d, m = %d, p = %d\n',n,m,p);
-fprintf('Maximum iter.    : %6.2E\n',MaxIter);
-fprintf('Stopping tol.    : %6.2E\n',tol);
+fprintf('Maximum iter.    : %6.2E\n',opts.maxIter);
+fprintf('Stopping opts.tol.    : %6.2E\n',opts.tol);
 fprintf(myline2);
 fprintf(header); 
 
-for Iter = 1:MaxIter 
+for Iter = 1:opts.maxIter 
     
     Jcost(Iter) = J;     % the LQG cost in the current step; 
     % --------------------------------------------------------------------
@@ -93,14 +93,14 @@ for Iter = 1:MaxIter
     ngradK = norm(gradK,'fro');
 
     % stop the algorithm if the norm of gradient is small enough        
-    if ngradK < tol
+    if ngradK < opts.tol
         break;
     end
     
     % --------------------------------------------------------------------
     %    Update according to Armijo rule: 
     % -------------------------------------------------------------------     
-    StepSize = initsize;
+    StepSize = opts.stepsize;
     Kt.Ak    = K.Ak - StepSize*Grad_A;
     Kt.Bk    = K.Bk - StepSize*Grad_B;
     Kt.Ck    = K.Ck - StepSize*Grad_C;
@@ -111,8 +111,8 @@ for Iter = 1:MaxIter
     Jtemp    = trace(blkdiag(W,Kt.Bk*Kt.Bk')*Y);
 
     % Backtracking line search
-    while mEigAcl >= 0 || J - Jtemp < StepSize*alpha*trace(gradK'*gradK)
-        StepSize = beta*StepSize;
+    while mEigAcl >= 0 || J - Jtemp < StepSize*opts.alpha*trace(gradK'*gradK)
+        StepSize = opts.beta*StepSize;
         if StepSize < 1.e-19
             warning('Gradient method gets stuck with very small step size!');
             break;
@@ -126,7 +126,7 @@ for Iter = 1:MaxIter
         Jtemp    = trace(blkdiag(W,Kt.Bk*Kt.Bk')*Y);
     end
 
-    if mod(Iter,Disp) == 0 || Iter == 1
+    if mod(Iter,opts.Disp) == 0 || Iter == 1
         fprintf('%4d     %6.4E    %6.4E    %6.3E \n',Iter, ngradK, J, StepSize);
     end
     
