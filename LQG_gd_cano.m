@@ -53,6 +53,7 @@ if(nargin > 8)
     initsize = opts.stepsize;
     tol      = opts.tol;
     MaxIter  = opts.maxIter;
+    Disp     = opts.Disp;
 end
 
 % ------------------------------------------------------------------------
