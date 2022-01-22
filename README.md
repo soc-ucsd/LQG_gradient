@@ -10,4 +10,13 @@ The gradient descent algorithms are implemented in
 * LQG_gd_cano.m (partial gradient over the controllable canonical form) 
 * LQG_gd_full.m (full gradient)
 
+
 Run Example_Doyle.m to see some performance; more examples are included in the *Examples* folder.
+
+# Landscape of dLQR problems (LQR using dynamical output feedback policies) 
+
+The "dLQR" contains the Python scripts for reproducing the experiments in our paper
+
+2) Jingliang Duan, Wenhan Cao, Yang Zheng, Lin Zhao (2022). On the Optimization Landscape of Dynamical Output Linear Quadratic Control. 
+
+Run dLQR.py to see the learning curves of three different dynamics; all six examples shown in our paper are included.
