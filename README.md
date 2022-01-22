@@ -13,9 +13,9 @@ The gradient descent algorithms are implemented in
 
 Run Example_Doyle.m to see some performance; more examples are included in the *Examples* folder.
 
-# Landscape of dLQR problems (LQR using dynamical output feedback policies) 
+# Landscape of dLQR problems (LQR with dynamical output feedback)
 
-The "dLQR" contains the Python scripts for reproducing the experiments in our paper
+The "dLQR" folder contains the Python scripts for reproducing the experiments in our paper
 
 2) Jingliang Duan, Wenhan Cao, Yang Zheng, Lin Zhao (2022). On the Optimization Landscape of Dynamical Output Linear Quadratic Control. 
 
