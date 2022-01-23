@@ -19,4 +19,4 @@ The "dLQR" folder contains the Python scripts for reproducing the experiments in
 
 2) Jingliang Duan, Wenhan Cao, Yang Zheng, Lin Zhao (2022). On the Optimization Landscape of Dynamical Output Linear Quadratic Control. 
 
-Run dLQR.py to see the learning curves of three different dynamics; all six examples shown in our paper are included.
+Run example_#.py to see the learning curves of example #.
