@@ -2,7 +2,7 @@
 
 This repository contains the MATLAB scripts for reproducing the experiments in our paper
 
-1) Yang Zheng*, Yujie Tang*, and Na Li (2020). Analysis of the Optimization Landscape of Linear Quadratic Gaussian (LQG) Control. under preparation. A preliminary version is here: [LINK](https://zhengy09.github.io/papers/LQG_landscape.pdf)  (*Equal contribution)
+1) Yujie Tang*, Yang Zheng* and Na Li (2020). [Analysis of the Optimization Landscape of Linear Quadratic Gaussian (LQG) Control](https://arxiv.org/abs/2102.04393). Mathematical Programming, under review, 2021 (A short version was accepted at L4DC, 2021) (*Equal contribution)
  
 
 ## Instructions
