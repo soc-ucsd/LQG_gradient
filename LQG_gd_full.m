@@ -4,7 +4,7 @@ function [Kopt,Jopt,info] = LQG_gd_full(A,B,C,Q,R,W,V,K0,userOpts)
 %
 %           K_{t+1} = K_t - s_t * Grad(K_t)
 %
-%    where we take a partial gradient in a canonical form
+%    where we take a full gradient with respect to (Ak, Bk, Ck)
 %    Step size s_t is chosen via the Armijo Rule
 %    Works for MIMO systems
 %
@@ -16,15 +16,16 @@ function [Kopt,Jopt,info] = LQG_gd_full(A,B,C,Q,R,W,V,K0,userOpts)
 %
 %    User options: opts
 %                    opts.opts.tol        stopping opts.tolorance
-%                    opts.stepsize   step size for line search
-%                    opts.opts.maxIter    maximum iterations
+%                    opts.stepsize        step size for line search
+%                    opts.maxIter    maximum iterations
 % Outputs:
 %    Kopt:  optimal controller
 %    Jopt:  optimal LQG cost
-%    info:  some output information
+%    info:  some other output information
 
-% Authors: Yand Zheng, Yujie Tang, Na Li
-% Paper:   Analysis of the Optimization Landscape of Linear Quadratic Gaussian Control
+% Authors: Yang Zheng, Yujie Tang, Na Li
+% Paper:   Analysis of the Optimization Landscape 
+%                               of Linear Quadratic Gaussian (LQG) Control
 
 
 flag = 1; % continuous time systems
@@ -38,7 +39,7 @@ opts.stepsize = 1;
 opts.alpha    = 0.2;     % backtrapping line search 
 opts.beta     = 0.5;
 opts.tol      = 1e-8;    % opts.tolerance of norm of gradient direction
-opts.maxIter  = 1e3;      % maximum number of gradient steps
+opts.maxIter  = 1e3;     % maximum number of gradient steps
 opts.Disp     = 100;
 
 myline1 = [repmat('=',1,48),'\n'];
@@ -75,9 +76,9 @@ end
 % ------------------------------------------------------------------------
 fprintf(myline1);
 fprintf('Gradient descent for LQG problem\n');
-fprintf('System dimensions: n = %d, m = %d, p = %d\n',n,m,p);
-fprintf('Maximum iter.    : %6.2E\n',opts.maxIter);
-fprintf('Stopping opts.tol.    : %6.2E\n',opts.tol);
+fprintf('System dimensions : n = %d, m = %d, p = %d\n',n,m,p);
+fprintf('Maximum iter.     : %6.2E\n',opts.maxIter);
+fprintf('Stopping opts.tol.: %6.2E\n',opts.tol);
 fprintf(myline2);
 fprintf(header); 
 

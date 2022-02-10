@@ -96,7 +96,7 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 300 300]);
 set(gca,'TickLabelInterpreter','latex')
-print(gcf,'Fig_Example6_1','-painters','-dpng','-r 600')
+%print(gcf,'Fig_Example6_1','-painters','-dpng','-r 600')
 
 figure;
 for ind = 1:Num
@@ -107,4 +107,4 @@ ylabel('Suboptimality ($J(K) - J^*$)','Interpreter','latex','FontSize',10);
 xlabel('Iterations $t$','Interpreter','latex','FontSize',10);
 set(gcf,'Position',[250 150 300 300]);
 set(gca,'TickLabelInterpreter','latex')
-print(gcf,'Fig_Example6_2','-painters','-dpng','-r 600')
+%print(gcf,'Fig_Example6_2','-painters','-dpng','-r 600')

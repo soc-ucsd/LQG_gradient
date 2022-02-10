@@ -16,15 +16,16 @@ function [Kopt,Jopt,info] = LQG_gd_cano(A,B,C,Q,R,W,V,K0,userOpts)
 %
 %    User options: opts
 %                    opts.opts.tol        stopping opts.tolorance
-%                    opts.stepsize   step size for line search
-%                    opts.opts.maxIter    maximum iterations
+%                    opts.stepsize        step size for line search
+%                    opts.maxIter    maximum iterations
 % Outputs:
 %    Kopt:  optimal controller
 %    Jopt:  optimal LQG cost
 %    info:  some output information
 
-% Authors: Yand Zheng, Yujie Tang, Na Li
-% Paper:   Analysis of the Optimization Landscape of Linear Quadratic Gaussian Control
+% Authors: Yang Zheng, Yujie Tang, Na Li
+% Paper:   Analysis of the Optimization Landscape 
+%                               of Linear Quadratic Gaussian (LQG) Control
 
 % System dimensions
 flag  = 1;         % continuous time systems for now
@@ -93,9 +94,9 @@ K.Ak = Ak; K.Bk = Bk; K.Ck = Ck;
 % ------------------------------------------------------------------------
 fprintf(myline1);
 fprintf('Gradient descent for LQG problem\n');
-fprintf('System dimensions: n = %d, m = %d, p = %d\n',n,m,p);
-fprintf('Maximum iter.    : %6.2E\n',opts.maxIter);
-fprintf('Stopping opts.tol.    : %6.2E\n',opts.tol);
+fprintf('System dimensions : n = %d, m = %d, p = %d\n',n,m,p);
+fprintf('Maximum iter.     : %6.2E\n',opts.maxIter);
+fprintf('Stopping opts.tol.: %6.2E\n',opts.tol);
 fprintf(myline2);
 fprintf(header); 
 
